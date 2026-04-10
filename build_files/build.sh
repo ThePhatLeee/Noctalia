@@ -2,34 +2,19 @@
 
 set -ouex pipefail
 
-### Install packages
+### 1. Enable the active lionheartp Hyprland COPR
+dnf5 -y copr enable lionheartp/Hyprland
 
-# Packages can be installed from any enabled yum repo on the image.
-# RPMfusion repos are available by default in ublue main images
-# List of rpmfusion packages can be found here:
-# https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
-
-# this installs a package from fedora repos
+### 2. Install the absolute bare minimum
+# sddm: So you can actually log in
+# noctalia-hyprland-meta: The entire Wayland/Hyprland core ecosystem
+# kitty: Your lifeline to install Nix tomorrow
 dnf5 install -y \
-    hyprland \
-    xdg-desktop-portal-hyprland \
-    polkit-gnome \
     sddm \
-    kitty \
-    waybar \
-    swaync \
-    rofi-wayland \
-    swaybg \
-    wl-clipboard \
-    network-manager-applet 
+    noctalia-hyprland-meta \
 
-# Use a COPR Example:
-#
-# dnf5 -y copr enable ublue-os/staging
-# dnf5 -y install package
-# Disable COPRs so they don't end up enabled on the final image:
-# dnf5 -y copr disable ublue-os/staging
+### 3. Disable the COPR
+dnf5 -y copr disable lionheartp/Hyprland
 
-#### Example for enabling a System Unit File
-
-systemctl enable podman.socket
+### 4. Enable SDDM
+systemctl enable sddm.service
