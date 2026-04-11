@@ -67,7 +67,8 @@ RUN dnf5 install -y \
     yazi \
     jq \
     socat \
-    unzip### 3. Disable the COPR
+    unzip  \
+### 3. Disable the COPR
 dnf5 -y copr disable lionheartp/Hyprland
 
 ### 4. Enable SDDM
