@@ -10,7 +10,6 @@ dnf5 install -y \
     xdg-desktop-portal-hyprland \
     polkit-gnome \
     swaync \
-    wl-clipboard \
     network-manager-applet \
     noctalia-hyprland-meta \
     hyprpolkitagent \
