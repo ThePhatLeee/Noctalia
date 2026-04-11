@@ -49,4 +49,7 @@ rm /etc/yum.repos.d/nordvpn.repo
 systemctl enable podman.socket
 systemctl enable sddm.service
 systemctl enable nix-daemon.service
+
+# Unmask and enable NordVPN
+systemctl unmask nordvpn.service
 systemctl enable nordvpn.service
