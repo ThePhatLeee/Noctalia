@@ -39,7 +39,7 @@ dnf5 install -y \
     hyprshutdown \
     gpu-screen-recorder \
     nix \
-    logiop \
+    logiops \
     nordvpn
 
 ### 3. Disable the COPR
