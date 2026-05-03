@@ -15,7 +15,6 @@ EOF
 dnf5 install -y \
     sddm \
     nautilus \
-    uwsm \
     xdg-desktop-portal-hyprland \
     network-manager-applet \
     noctalia-hyprland-meta \
@@ -38,7 +37,6 @@ dnf5 install -y \
     hyprpwcenter \
     hyprshutdown \
     gpu-screen-recorder \
-    nix \
     nordvpn
 
 ### 3. Disable the COPR
