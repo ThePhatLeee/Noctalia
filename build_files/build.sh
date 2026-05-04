@@ -1,5 +1,8 @@
 set -ouex pipefail
 
+### 0. Ensure COPR support exists (needed in minimal build roots)
+dnf5 install -y dnf5-plugins
+
 ### 1. Enable the active lionheartp Hyprland COPR
 dnf5 -y copr enable lionheartp/Hyprland
 #Download the NordVPN repo file directly into the container build
