@@ -3,7 +3,7 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-FROM quay.io/ublue-os/base-nvidia
+FROM ghcr.io/ublue-os/base-nvidia:latest
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:latest
