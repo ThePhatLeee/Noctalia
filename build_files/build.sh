@@ -47,4 +47,3 @@ rm /etc/yum.repos.d/nordvpn.repo
 ### 4. Enable System Units
 systemctl enable podman.socket
 systemctl enable sddm.service
-systemctl enable kanshi.service
