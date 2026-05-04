@@ -37,6 +37,7 @@ dnf5 install -y \
     hyprpwcenter \
     hyprshutdown \
     gpu-screen-recorder \
+    kanshi \
     nordvpn
 
 ### 3. Disable the COPR
@@ -46,3 +47,4 @@ rm /etc/yum.repos.d/nordvpn.repo
 ### 4. Enable System Units
 systemctl enable podman.socket
 systemctl enable sddm.service
+systemctl enable kanshi.service
