@@ -5,6 +5,7 @@
 *Kaamos* — Finnish for the polar night. The period when the sun does not rise.
 
 [![Build](https://github.com/ThePhatLeee/Kaamos/actions/workflows/build.yml/badge.svg)](https://github.com/ThePhatLeee/Kaamos/actions/workflows/build.yml)
+[![ISO Release](https://img.shields.io/github/v/release/ThePhatLeee/Kaamos?filter=iso-*&label=ISO&color=blue)](https://github.com/ThePhatLeee/Kaamos/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 ---
@@ -59,7 +60,7 @@ systemctl reboot
 
 ### Fresh install via ISO
 
-Download the latest ISO from the [Releases](https://github.com/ThePhatLeee/Kaamos/releases) page or trigger a disk image build manually from the Actions tab.
+Download the latest ISO directly from the **[Releases](https://github.com/ThePhatLeee/Kaamos/releases)** page — a new ISO is built automatically on the 1st of every month and kept for 30 days.
 
 ---
 
