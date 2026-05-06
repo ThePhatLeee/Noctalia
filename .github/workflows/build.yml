@@ -14,11 +14,11 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_DESC: "Noctalia — minimal Fedora bootc with Hyprland, NVIDIA open drivers, Flathub and Distrobox"
-  IMAGE_KEYWORDS: "bootc,hyprland,nvidia,wayland,fedora,noctalia"
+  IMAGE_DESC: "Kaamos — minimal Fedora bootc with Hyprland, NVIDIA open drivers, Flathub and Distrobox"
+  IMAGE_KEYWORDS: "bootc,hyprland,nvidia,wayland,fedora,kaamos"
   IMAGE_LOGO_URL: "https://avatars.githubusercontent.com/u/120078124?s=200&v=4"
-  IMAGE_NAME: "${{ github.event.repository.name }}"  # output image name, keep same as repo name
-  IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"  # do not edit
+  IMAGE_NAME: "${{ github.event.repository.name }}"
+  IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"
   DEFAULT_TAG: "latest"
 
 concurrency:
@@ -38,25 +38,14 @@ jobs:
     steps:
       - name: Prepare environment
         run: |
-          # Lowercase the image uri
           echo "IMAGE_REGISTRY=${IMAGE_REGISTRY,,}" >> ${GITHUB_ENV}
           echo "IMAGE_NAME=${IMAGE_NAME,,}" >> ${GITHUB_ENV}
 
-      # These stage versions are pinned by https://github.com/renovatebot/renovate
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Maximize build space
         uses: ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
-
-      - name: Detect latest Fedora version
-        id: fedora
-        run: |
-          FEDORA_VERSION=$(skopeo list-tags docker://quay.io/fedora/fedora-bootc 2>/dev/null \
-            | python3 -c "import sys,json; d=json.load(sys.stdin); v=[int(t) for t in d.get('Tags',[]) if t.isdigit()]; print(max(v) if v else 44)" \
-            2>/dev/null)
-          FEDORA_VERSION=${FEDORA_VERSION:-44}
-          echo "version=${FEDORA_VERSION}" >> "${GITHUB_OUTPUT}"
 
       - name: Get current date
         id: date
@@ -101,21 +90,7 @@ jobs:
           image: ${{ env.IMAGE_NAME }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
-          build-args: |
-            FEDORA_VERSION=${{ steps.fedora.outputs.version }}
           oci: false
-
-      # Rechunk is commented out — uncomment if you hit large single-layer issues
-      # - name: Run Rechunker
-      #   id: rechunk
-      #   uses: ublue-os/legacy-rechunk@a925083d9af7cb04b3e2a6e8c01bfa495f38b710 # v1.0.0
-      #   with:
-      #     rechunk: 'ghcr.io/ublue-os/legacy-rechunk:v1.0.0-x86_64'
-      #     ref: "localhost/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}"
-      #     prev-ref: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}"
-      #     skip_compression: true
-      #     version: ${{ env.CENTOS_VERSION }}
-      #     labels: ${{ steps.metadata.outputs.labels }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
