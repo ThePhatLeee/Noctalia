@@ -15,7 +15,7 @@ gpgkey=https://repo.nordvpn.com/gpg/nordvpn_public.asc
 gpgcheck=1
 EOF
 
-# ── 2. Noctalia stack ─────────────────────────────────────────────────────────
+# ── 2. Kaamos stack ───────────────────────────────────────────────────────────
 
 dnf5 install -y \
     sddm \
@@ -65,7 +65,7 @@ dnf5 clean all
 # ── 6. SDDM — Wayland config (fixes black screen on NVIDIA) ──────────────────
 
 mkdir -p /usr/share/sddm/sddm.conf.d
-tee /usr/share/sddm/sddm.conf.d/noctalia.conf << "EOF" > /dev/null
+tee /usr/share/sddm/sddm.conf.d/kaamos.conf << "EOF" > /dev/null
 [General]
 DisplayServer=wayland
 Numlock=on
@@ -78,14 +78,14 @@ mkdir -p /usr/share/wayland-sessions
 tee /usr/share/wayland-sessions/hyprland.desktop << "EOF" > /dev/null
 [Desktop Entry]
 Name=Hyprland
-Comment=Noctalia — dynamic tiling Wayland compositor
+Comment=Kaamos — dynamic tiling Wayland compositor
 Exec=Hyprland
 Type=Application
 DesktopNames=Hyprland
 EOF
 
 mkdir -p /usr/lib/tmpfiles.d
-tee /usr/lib/tmpfiles.d/noctalia-sddm.conf << "EOF" > /dev/null
+tee /usr/lib/tmpfiles.d/kaamos-sddm.conf << "EOF" > /dev/null
 d /var/lib/sddm 0750 sddm sddm -
 d /var/lib/sddm/themes 0750 sddm sddm -
 EOF
@@ -101,7 +101,7 @@ WLR_NO_HARDWARE_CURSORS=1
 EOF
 
 mkdir -p /usr/lib/modprobe.d
-tee /usr/lib/modprobe.d/noctalia-nvidia.conf << "EOF" > /dev/null
+tee /usr/lib/modprobe.d/kaamos-nvidia.conf << "EOF" > /dev/null
 options nvidia NVreg_DynamicPowerManagement=0x02
 options nvidia-drm modeset=1
 EOF
