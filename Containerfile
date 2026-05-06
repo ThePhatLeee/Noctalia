@@ -32,9 +32,7 @@ RUN dnf5 install -y \
 # ── NVIDIA userspace ─────────────────────────────────────────────────────────
 RUN dnf5 install -y \
       nvidia-driver \
-      nvidia-driver-libs \
-      libva-nvidia-driver \
-      egl-wayland && \
+      libva-nvidia-driver && \
     dnf5 clean all
 
 # ── NVIDIA kernel arguments ──────────────────────────────────────────────────
