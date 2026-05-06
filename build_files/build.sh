@@ -44,6 +44,7 @@ dnf5 install -y \
     hyprshutdown \
     gpu-screen-recorder \
     kanshi \
+    stow \
     nordvpn
 
 # ── 3. Flatpak + Flathub ─────────────────────────────────────────────────────
