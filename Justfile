@@ -1,4 +1,4 @@
-export image_name := env("IMAGE_NAME", "noctalia") # output image name, usually same as repo name, change as needed
+export image_name := env("IMAGE_NAME", "kaamos")
 export default_tag := env("DEFAULT_TAG", "latest")
 export bib_image := env("BIB_IMAGE", "quay.io/centos-bootc/bootc-image-builder:latest")
 
@@ -141,27 +141,21 @@ _build-bib $target_image $tag $type $config: (_rootful_load_image target_image t
 
 _rebuild-bib $target_image $tag $type $config: (build target_image tag) && (_build-bib target_image tag type config)
 
-# Build a QCOW2 virtual machine image
 [group('Build Virtal Machine Image')]
 build-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_build-bib target_image tag "qcow2" "disk_config/disk.toml")
 
-# Build a RAW virtual machine image
 [group('Build Virtal Machine Image')]
 build-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_build-bib target_image tag "raw" "disk_config/disk.toml")
 
-# Build an ISO virtual machine image
 [group('Build Virtal Machine Image')]
 build-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_build-bib target_image tag "iso" "disk_config/iso.toml")
 
-# Rebuild a QCOW2 virtual machine image
 [group('Build Virtal Machine Image')]
 rebuild-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_rebuild-bib target_image tag "qcow2" "disk_config/disk.toml")
 
-# Rebuild a RAW virtual machine image
 [group('Build Virtal Machine Image')]
 rebuild-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_rebuild-bib target_image tag "raw" "disk_config/disk.toml")
 
-# Rebuild an ISO virtual machine image
 [group('Build Virtal Machine Image')]
 rebuild-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_rebuild-bib target_image tag "iso" "disk_config/iso.toml")
 
@@ -201,19 +195,15 @@ _run-vm $target_image $tag $type $config:
     (sleep 30 && xdg-open http://localhost:"$port") &
     podman run "${run_args[@]}"
 
-# Run a virtual machine from a QCOW2 image
 [group('Run Virtal Machine')]
 run-vm-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "qcow2" "disk_config/disk.toml")
 
-# Run a virtual machine from a RAW image
 [group('Run Virtal Machine')]
 run-vm-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "raw" "disk_config/disk.toml")
 
-# Run a virtual machine from an ISO
 [group('Run Virtal Machine')]
 run-vm-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "iso" "disk_config/iso.toml")
 
-# Run a virtual machine using systemd-vmspawn
 [group('Run Virtal Machine')]
 spawn-vm rebuild="0" type="qcow2" ram="6G":
     #!/usr/bin/env bash
@@ -231,7 +221,6 @@ spawn-vm rebuild="0" type="qcow2" ram="6G":
       --vsock=false --pass-ssh-key=false \
       -i ./output/**/*.{{ type }}
 
-# Runs shell check on all Bash scripts
 lint:
     #!/usr/bin/env bash
     set -eoux pipefail
@@ -241,7 +230,6 @@ lint:
     fi
     /usr/bin/find . -iname "*.sh" -type f -exec shellcheck "{}" ';'
 
-# Runs shfmt on all Bash scripts
 format:
     #!/usr/bin/env bash
     set -eoux pipefail
