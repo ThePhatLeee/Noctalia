@@ -3,14 +3,10 @@ set -ouex pipefail
 
 # ── 1. Repos ─────────────────────────────────────────────────────────────────
 
-### Install dnf5-plugins to make the 'copr' subcommand available
 dnf5 install -y dnf5-plugins
 
-### Enable the active lionheartp Hyprland COPR
 dnf5 -y copr enable lionheartp/Hyprland
 
-### NordVPN repo
-# Note: using tee directly — we are already root inside a container build
 tee /etc/yum.repos.d/nordvpn.repo << "EOF" > /dev/null
 [nordvpn]
 name=NordVPN
@@ -19,7 +15,7 @@ gpgkey=https://repo.nordvpn.com/gpg/nordvpn_public.asc
 gpgcheck=1
 EOF
 
-# ── 2. Install the Noctalia Stack ────────────────────────────────────────────
+# ── 2. Noctalia stack ─────────────────────────────────────────────────────────
 
 dnf5 install -y \
     sddm \
@@ -47,14 +43,12 @@ dnf5 install -y \
     hyprshutdown \
     gpu-screen-recorder \
     kanshi \
-    stow \
     nordvpn
 
-# ── 3. Flatpak + Flathub ─────────────────────────────────────────────────────
+# ── 3. Flatpak + Flathub ──────────────────────────────────────────────────────
 
 dnf5 install -y flatpak
 
-# Register Flathub as a system-wide remote (available to all users, no apps pre-installed)
 flatpak remote-add --if-not-exists --system flathub \
     https://dl.flathub.org/repo/flathub.flatpakrepo
 
@@ -62,17 +56,16 @@ flatpak remote-add --if-not-exists --system flathub \
 
 dnf5 install -y distrobox
 
-# ── 5. Disable / clean up repos ──────────────────────────────────────────────
+# ── 5. Disable / clean repos ─────────────────────────────────────────────────
 
 dnf5 -y copr disable lionheartp/Hyprland
 rm -f /etc/yum.repos.d/nordvpn.repo
+dnf5 clean all
 
-# ── 6. SDDM — Wayland mode (fixes black screen on NVIDIA + Hyprland) ─────────
+# ── 6. SDDM — Wayland config (fixes black screen on NVIDIA) ──────────────────
 
-# Vendor config: put in /usr/share so it is image-managed and read-only
-# Users can override via /etc/sddm.conf.d/ at runtime
 mkdir -p /usr/share/sddm/sddm.conf.d
-tee /usr/share/sddm/sddm.conf.d/noctalia.conf << EOF > /dev/null
+tee /usr/share/sddm/sddm.conf.d/noctalia.conf << "EOF" > /dev/null
 [General]
 DisplayServer=wayland
 Numlock=on
@@ -81,25 +74,40 @@ Numlock=on
 SessionDir=/usr/share/wayland-sessions
 EOF
 
-# Wayland session entry so SDDM knows how to launch Hyprland
 mkdir -p /usr/share/wayland-sessions
-tee /usr/share/wayland-sessions/hyprland.desktop << EOF > /dev/null
+tee /usr/share/wayland-sessions/hyprland.desktop << "EOF" > /dev/null
 [Desktop Entry]
 Name=Hyprland
 Comment=Noctalia — dynamic tiling Wayland compositor
 Exec=Hyprland
 Type=Application
+DesktopNames=Hyprland
 EOF
 
-# Mutable SDDM theme directory on the immutable filesystem
-# tmpfiles.d creates /var/lib/sddm/themes at boot — users drop themes there
 mkdir -p /usr/lib/tmpfiles.d
-tee /usr/lib/tmpfiles.d/noctalia-sddm.conf << EOF > /dev/null
+tee /usr/lib/tmpfiles.d/noctalia-sddm.conf << "EOF" > /dev/null
 d /var/lib/sddm 0750 sddm sddm -
 d /var/lib/sddm/themes 0750 sddm sddm -
 EOF
 
-# ── 7. Enable System Units ───────────────────────────────────────────────────
+# ── 7. NVIDIA Wayland environment variables ───────────────────────────────────
+
+mkdir -p /usr/lib/environment.d
+tee /usr/lib/environment.d/10-nvidia-wayland.conf << "EOF" > /dev/null
+LIBVA_DRIVER_NAME=nvidia
+GBM_BACKEND=nvidia-drm
+__GLX_VENDOR_LIBRARY_NAME=nvidia
+WLR_NO_HARDWARE_CURSORS=1
+EOF
+
+mkdir -p /usr/lib/modprobe.d
+tee /usr/lib/modprobe.d/noctalia-nvidia.conf << "EOF" > /dev/null
+options nvidia NVreg_DynamicPowerManagement=0x02
+options nvidia-drm modeset=1
+EOF
+
+# ── 8. Enable system units ────────────────────────────────────────────────────
 
 systemctl enable podman.socket
 systemctl enable sddm.service
+systemctl enable bluetooth.service
