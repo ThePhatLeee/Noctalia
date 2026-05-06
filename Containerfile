@@ -1,9 +1,10 @@
+# ── Fedora version — must be declared before ALL FROM statements ──────────────
+# Override at build time: --build-arg FEDORA_VERSION=45
+ARG FEDORA_VERSION=44
+
 # ── Stage 0: build context ───────────────────────────────────────────────────
 FROM scratch AS ctx
 COPY build_files /
-
-# ── Fedora version (override at build time: --build-arg FEDORA_VERSION=44) ───
-ARG FEDORA_VERSION=44
 
 # ── Stage 1: pre-built NVIDIA open kernel modules from ublue ─────────────────
 # akmods-nvidia-open contains RPMs pre-compiled against the Fedora kernel.
@@ -13,7 +14,7 @@ ARG FEDORA_VERSION=44
 # Use akmods-nvidia (not -open) only for pre-Turing (GTX 10xx and older).
 FROM ghcr.io/ublue-os/akmods-nvidia-open:main-${FEDORA_VERSION} AS nvidia-rpms
 
-# ── Stage 2: Noctalia OS ─────────────────────────────────────────────────────
+# ── Stage 2: Kaamos OS ───────────────────────────────────────────────────────
 FROM quay.io/fedora/fedora-bootc:${FEDORA_VERSION}
 
 # ── RPMFusion (required for NVIDIA userspace packages) ───────────────────────
@@ -25,7 +26,7 @@ RUN dnf5 install -y \
 COPY --from=nvidia-rpms /rpms/ /tmp/nvidia-rpms/
 RUN dnf5 install -y \
       /tmp/nvidia-rpms/ublue-os/ublue-os-nvidia*.rpm \
-      /tmp/nvidia-rpms/kmods/kmod-nvidia*.rpm && \
+      /tmp/nvidia-rpms/kmods/kmod-nvidia-open*.rpm && \
     rm -rf /tmp/nvidia-rpms
 
 # ── NVIDIA userspace ─────────────────────────────────────────────────────────
@@ -44,7 +45,7 @@ RUN bootc kargs set -- \
       modprobe.blacklist=nouveau \
       nvidia-drm.modeset=1
 
-# ── Noctalia build ───────────────────────────────────────────────────────────
+# ── Kaamos build ─────────────────────────────────────────────────────────────
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
