@@ -26,7 +26,7 @@ RUN dnf5 install -y \
 COPY --from=nvidia-rpms /rpms/ /tmp/nvidia-rpms/
 RUN dnf5 install -y \
       /tmp/nvidia-rpms/ublue-os/ublue-os-nvidia*.rpm \
-      /tmp/nvidia-rpms/kmods/kmod-nvidia-open*.rpm && \
+      /tmp/nvidia-rpms/kmods/*.rpm && \
     rm -rf /tmp/nvidia-rpms
 
 # ── NVIDIA userspace ─────────────────────────────────────────────────────────
