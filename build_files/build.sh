@@ -3,6 +3,9 @@ set -ouex pipefail
 
 # ── 1. Repos ─────────────────────────────────────────────────────────────────
 
+### Install dnf5-plugins to make the 'copr' subcommand available
+dnf5 install -y dnf5-plugins
+
 ### Enable the active lionheartp Hyprland COPR
 dnf5 -y copr enable lionheartp/Hyprland
 
