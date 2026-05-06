@@ -5,6 +5,8 @@
 *Kaamos* — Finnish for the polar night. The period when the sun does not rise.
 
 [![Build](https://github.com/ThePhatLeee/Kaamos/actions/workflows/build.yml/badge.svg)](https://github.com/ThePhatLeee/Kaamos/actions/workflows/build.yml)
+[![Build ISO](https://github.com/ThePhatLeee/Kaamos/actions/workflows/build-iso.yml/badge.svg)](https://github.com/ThePhatLeee/Kaamos/actions/workflows/build-iso.yml)
+[![Build Disk](https://github.com/ThePhatLeee/Kaamos/actions/workflows/build-disk.yml/badge.svg)](https://github.com/ThePhatLeee/Kaamos/actions/workflows/build-disk.yml)
 [![ISO Release](https://img.shields.io/github/v/release/ThePhatLeee/Kaamos?filter=iso-*&label=ISO&color=blue)](https://github.com/ThePhatLeee/Kaamos/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
