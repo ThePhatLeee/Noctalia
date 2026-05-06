@@ -54,7 +54,8 @@ jobs:
         run: |
           FEDORA_VERSION=$(skopeo list-tags docker://quay.io/fedora/fedora-bootc 2>/dev/null \
             | python3 -c "import sys,json; d=json.load(sys.stdin); v=[int(t) for t in d.get('Tags',[]) if t.isdigit()]; print(max(v) if v else 44)" \
-            2>/dev/null) || FEDORA_VERSION=44
+            2>/dev/null)
+          FEDORA_VERSION=${FEDORA_VERSION:-44}
           echo "version=${FEDORA_VERSION}" >> "${GITHUB_OUTPUT}"
 
       - name: Get current date
