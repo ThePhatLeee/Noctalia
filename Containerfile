@@ -36,12 +36,12 @@ RUN dnf5 install -y \
     dnf5 clean all
 
 # ── NVIDIA kernel arguments ──────────────────────────────────────────────────
-# All three required — without them SDDM shows a black screen on NVIDIA.
+# bootc kargs is a runtime command — kernel args are set at build time
+# by writing a TOML file to /usr/lib/bootc/kargs.d/ which bootc reads on deploy.
 # Do NOT add nvidia_drm.fbdev=0 — breaks display on driver 580+.
-RUN bootc kargs set -- \
-      rd.driver.blacklist=nouveau \
-      modprobe.blacklist=nouveau \
-      nvidia-drm.modeset=1
+RUN mkdir -p /usr/lib/bootc/kargs.d && \
+    printf 'kargs = ["rd.driver.blacklist=nouveau", "modprobe.blacklist=nouveau", "nvidia-drm.modeset=1"]\n' \
+    > /usr/lib/bootc/kargs.d/nvidia.toml
 
 # ── Kaamos build ─────────────────────────────────────────────────────────────
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
